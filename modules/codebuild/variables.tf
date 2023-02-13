@@ -8,3 +8,6 @@ variable "project_name" {
   default = "validateproject"
 }
 
+variable "another_variable"{
+  type = string
+}
