@@ -1,3 +1,5 @@
+# Adding more comments here to make sure that Pull request is created without any issues.
+
 resource "aws_codepipeline" "codepipeline" {
   name = "${var.project_name}-codepipeline"
   role_arn = var.codepipeline_role_arn
