@@ -10,7 +10,6 @@ terraform {
 Make sure that s3 and dynamoDB are created in advance before setting up backend
 one good way of setting up backend is using cloudformation to deploy s3 and dynamoDB
 */
- 
   backend "s3" {
     bucket = "rksh-terraform-state-ap-southeast-2"
     key = "opendata-prod"
@@ -19,6 +18,6 @@ one good way of setting up backend is using cloudformation to deploy s3 and dyna
   }
 }
 
-aws {
+provider aws {
   region = "ap-southeast-2"
 }
