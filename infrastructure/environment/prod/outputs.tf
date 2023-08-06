@@ -1,5 +1,4 @@
-# output "KMS_ARN" {
-#   description = "ARN of KMS Key"
-#   value = module.ecr_kms_resources.
-  
-# }
+output "kmsKeyARN" {
+  description = "ARN of KMS Key"
+  value = module.sharedResources.kmsKeyArn
+}
