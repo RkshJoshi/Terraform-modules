@@ -9,5 +9,9 @@ output "kmsKeyId" {
 }
 
 output "repoURIs" {
-  value = [for key in aws_ecr_repository.ecr_repo : key.arn]
+  value = {
+    for repo_name, repo_config in aws_ecr_repository.ecr_repo :
+    repo_name => repo_config.repository_url
+  }
+  description = "URIs of Repository"
 }

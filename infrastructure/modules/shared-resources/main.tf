@@ -67,6 +67,7 @@ resource "aws_ecr_repository" "ecr_repo" {
   tags = local.commonTags
 }
 
+/*
 resource "aws_db_subnet_group" "ckanDBSubnetGroup" {
   name = "ckan-db-subnetgroup-${var.envName}"
   subnet_ids = var.privateSubnets 
@@ -168,3 +169,4 @@ resource "aws_elasticache_replication_group" "ckanRedis"{
     ignore_changes = [num_cache_clusters]
   }
 }
+*/
