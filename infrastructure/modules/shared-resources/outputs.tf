@@ -13,5 +13,5 @@ output "repoURIs" {
     for repo_name, repo_config in aws_ecr_repository.ecr_repo :
     repo_name => repo_config.repository_url
   }
-  description = "URIs of Repository"
+  description = "URIs of Repositories"
 }
