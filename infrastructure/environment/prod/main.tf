@@ -13,4 +13,8 @@ module "sharedResources" {
   backupWindow            = "09:00-10:00"
   dbDeletionProtection    = false
   dbEngine                = "14.5"
+  redisAtRestEncryption = true
+  redisEncryptionInTransit = true
+  autoMinorVersion = true
+  enableAutomaticFailover = true
 }

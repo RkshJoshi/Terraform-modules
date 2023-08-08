@@ -69,7 +69,7 @@ resource "aws_ecr_repository" "ecr_repo" {
 
 resource "aws_db_subnet_group" "ckanDBSubnetGroup" {
   name = "ckan-db-subnetgroup-${var.envName}"
-  subnet_ids = var.privateSubnets // can also restrieve subnetIds from data sources
+  subnet_ids = var.privateSubnets 
   tags = local.commonTags
 }
 
@@ -114,5 +114,57 @@ resource "aws_db_instance" "ckan_db"{
   vpc_security_group_ids = [aws_db_subnet_group.ckanDBSubnetGroup.id]
   lifecycle {
     create_before_destroy = true
+  }
+}
+
+// Resources for redis with cluster mode disabled
+
+resource "aws_elasticache_subnet_group" "redisSubnetGroup"{
+  # count = var.envName == "dev" ? 0 :1
+  name = "ckan-redis-${var.envName}"
+  description = "SubnetGroup for CKAN Redis in ${var.envName} env"
+  subnet_ids = var.restrictedSubnets
+  tags = local.commonTags
+}
+
+resource "aws_security_group" "redisSG" {
+  name = "redisDG-${var.envName}"
+  description = "SecurityGroup Of ckan redis"
+  ingress {
+    description = "Allow 6379 from CKAN"
+    from_port = "6379"
+    to_port = "6379"
+    protocol = "tcp"
+    cidr_blocks = [data.aws_vpc.vpc.cidr_block]
+  }
+  egress {
+    from_port = 0
+    to_port = 0
+    cidr_blocks = ["0.0.0.0/0"]
+    protocol = "-1"
+    description = "Allow all outbound access"
+  }
+}
+
+resource "aws_elasticache_replication_group" "ckanRedis"{
+  description = "CKAN Redis for ${var.envName} environment"
+  replication_group_id = "ckan-redis-${var.envName}"
+  apply_immediately = true
+  at_rest_encryption_enabled = var.redisAtRestEncryption
+  transit_encryption_enabled = var.redisEncryptionInTransit
+  auto_minor_version_upgrade = var.autoMinorVersion
+  automatic_failover_enabled = var.enableAutomaticFailover
+  engine = "redis"
+  engine_version = "7.2"
+  kms_key_id = aws_kms_key.ckan_kms_key.arn
+  maintenance_window = "sun:05:00-sun:09:00"
+  multi_az_enabled = true
+  security_group_ids = [aws_security_group.redisSG.id]
+  port = 6379
+  subnet_group_name = aws_elasticache_subnet_group.redisSubnetGroup.name
+  node_type = "cache.tg4.small"
+  num_cache_clusters = 2
+  lifecycle {
+    ignore_changes = [num_cache_clusters]
   }
 }

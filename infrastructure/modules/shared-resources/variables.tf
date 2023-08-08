@@ -79,3 +79,28 @@ variable "dbEngineVersion"{
   default= "14.5"
   description = "Database engine version"
 }
+
+# Elasticache Redis variables
+
+variable "redisAtRestEncryption"{
+  type = bool
+  description = "Enable encryption at rest"
+}
+
+variable "redisEncryptionInTransit"{
+  type = bool
+  description = "Enable encryption in transit"
+}
+
+variable "autoMinorVersion"{
+  type = bool
+  description = "Enable Auto minor version upgrade"
+}
+
+variable "enableAutomaticFailover"{
+  type= bool
+  description = "Enable automatic failover"
+}
+
+
+
